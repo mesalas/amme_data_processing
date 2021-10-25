@@ -52,9 +52,30 @@ class AgentsData:
             bars.append(pivot_pos)
         return pd.concat(bars).ffill().fillna(0.0)
 
+    def _resample_agent_stat_daily(self):
+        daily_grouped_agent_stat = self.agent_statistic.groupby(
+            pd.Grouper(key="DateTime",
+                       freq='B'
+                       ), sort=False
+        )
+
+        bars = list()
+        for name, group in daily_grouped_agent_stat:
+            pivot_pos = group.pivot_table(values = self.agent_statistic, index="DateTime", columns="AgentName", aggfunc = "last").ffill().tail(1) 
+            pivot_pos.columns = pivot_pos.columns.droplevel()
+            bars.append(pivot_pos)
+        return pd.concat(bars).ffill().fillna(0.0)
+
 
     def resample(self, freq):
         agent_statistics = self._resample_agent_stat(freq)
         agent_statistics["DateTime"] = agent_statistics.index
         return agent_statistics.reset_index(drop=True)
+    
+    def resample_daily(self):
+        
+        agent_statistics = self._resample_agent_stat_daily()
+        agent_statistics["DateTime"] = agent_statistics.index
+        return agent_statistics.reset_index(drop=True)
+
 
