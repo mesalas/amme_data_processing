@@ -8,6 +8,8 @@ class TradesData:
             self.passive_fill_qty_col = " passive_fillQty"
             self.timestamp_col_name = "Nanos"
             self.timestamp_units = "ns"
+            self.active_agent_col = "active_agent"
+            self.passive_agent_col = "passive_agent"
 
             self.read_data = self.read_amme_matched_orders_data
             self.resample_data = self.resample_amme_matched_orders_data
@@ -21,7 +23,12 @@ class TradesData:
 
     def read_amme_matched_orders_data(self, path):
         load_csv_kw_args = {"filepath_or_buffer" : path,
-                            "usecols" : ["DateTime",self.active_fill_price_col,self.passive_fill_qty_col]}
+                            "usecols" : ["DateTime",
+                                         self.active_fill_price_col,
+                                         self.passive_fill_qty_col,
+                                         self.active_agent_col,
+                                         self.passive_agent_col]
+                            }
 
         self.trades = pd.read_csv(**load_csv_kw_args)
 
