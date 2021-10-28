@@ -96,6 +96,28 @@ class TradesData:
         resampled_data["DateTime"] = resampled_data.index + pd.Timedelta(self.market_open)
         return resampled_data.reset_index(drop = True)
 
+    def select_data_in_windows(self,windows):
+        """Selects trades defined by window bounds given as [[bound1_start, bound1_end], [bound2_start, bound2_end], ...] Selected trades replaces trades already in object"""
+        self.trades.index = self.trades["DateTime"]
+        selected_trades = list()
+        for window in windows:
+            try:
+                selected_trades.append(self.trades.loc[window[0]:window[1]])
+            except:
+                print("could not select",window[0],window[1])
+                continue
+        self.trades = pd.concat(selected_trades)
+
+    def strip_agent_numbers(self):
+        """Strips agent number from passive and active agent colums from trade data"""
+        self.trades["active_agent"] = self.trades["active_agent"].apply(
+            lambda s: s.split("-")[0])
+        self.trades["passive_agent"] = self.trades["passive_agent"].apply(
+            lambda s: s.split("-")[0])
+
+    def make_directional_agent_pair_volumes(self):
+        return self.trades.groupby(["active_agent","passive_agent"])[" passive_fillQty"].sum().reset_index().rename(columns = {" passive_fillQty": "volume"})
+
         #resampled_data["Dollar Volume"] = resampled.agg({"Dollar Volume": "sum"})
 
     
