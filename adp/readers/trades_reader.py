@@ -83,6 +83,10 @@ class TradesData:
         resampled_data["Trade Volume"] = resampled.agg({volume: "sum"})
         resampled_data["Trades"] = resampled.agg({
             volume: "count"})
+        resampled_data["First"] = resampled.agg({
+            "DateTime": "first"})
+        resampled_data["Last"] = resampled.agg({
+            "DateTime": "last"})
         return resampled_data
 
     def resample_amme_matched_orders_data(self,freq):
