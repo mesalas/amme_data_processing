@@ -38,7 +38,7 @@ def match_bars_and_trades(trades_path, bars_path, active_passive_table_path, hea
     bars = pd.read_csv(bars_path) # Read Bars
 
     # Assign Quantiles and make windows
-    bars = assign_percentiles(bars, n_quantiles)
+    #bars = assign_percentiles(bars, n_quantiles) this should be done when making the bars
     windows = make_quantile_windows(bars, target_quant)
 
     matched_orders_copy = copy.deepcopy(matched_orders) # We copy the trades data objet so we can modify it
