@@ -31,7 +31,7 @@ def make_traded_volume_matrix(agents_log, cutoff):
 
     return nodes,edges
 
-def match_bars_and_trades(trades_path, bars_path, active_passive_table_path, heatmap_path,heatmap_csv_path,target_quant,n_quantiles = 20):
+def match_bars_and_trades(trades_path, bars_path, heatmap_path,heatmap_csv_path,target_quant,n_quantiles = 20):
     matched_orders = TradesData("amme_matched_orders")
     matched_orders.read_data(trades_path)
     
