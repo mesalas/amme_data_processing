@@ -85,10 +85,9 @@ def match_bars_and_trades(trades_path, bars_path, active_passive_table_path, hea
 if __name__ == "__main__":
     trades_path = sys.argv[1]
     bars_path = sys.argv[2]
-    active_passive_table_path = sys.argv[3]
-    heatmap_path = sys.argv[4]
-    heatmap_csv_path = sys.argv[5]
-    write_quantiles = int(sys.argv[6])
+    heatmap_path = sys.argv[3]
+    heatmap_csv_path = sys.argv[4]
+    write_quantiles = int(sys.argv[5])
     match_bars_and_trades(trades_path,
                           bars_path,
                           heatmap_path,
