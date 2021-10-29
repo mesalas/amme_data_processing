@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from adp.readers.trades_reader import TradesData
@@ -89,7 +91,6 @@ if __name__ == "__main__":
     write_quantiles = int(sys.argv[6])
     match_bars_and_trades(trades_path,
                           bars_path,
-                          active_passive_table_path,
                           heatmap_path,
                           heatmap_csv_path,
                           write_quantiles,
