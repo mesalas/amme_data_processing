@@ -31,37 +31,11 @@ def make_traded_volume_matrix(agents_log, cutoff):
 
     return nodes,edges
 
-def match_bars_and_trades(trades_path, bars_path, heatmap_path,heatmap_csv_path,target_quant,n_quantiles = 20):
-    matched_orders = TradesData("amme_matched_orders")
-    matched_orders.read_data(trades_path)
-    
-    # we want to calculate network properties in different "regimes" these are found by assigning quantiles to each bar
-    
-    bars = pd.read_csv(bars_path) # Read Bars
-
-    # Assign Quantiles and make windows
-    #bars = assign_percentiles(bars, n_quantiles) this should be done when making the bars
-    windows = make_quantile_windows(bars, target_quant)
-
-    matched_orders_copy = copy.deepcopy(matched_orders) # We copy the trades data objet so we can modify it
-
-        # Read trades
-    matched_orders_copy.trades.index = matched_orders_copy.trades["DateTime"] # make datetime index
-
-
-
-    #select trades in windows define by quantiles
-    matched_orders_copy.select_data_in_windows(windows)
-    
-    #TODO: passive active stats. Are we using this?
-    #passive_active_stat = matched_orders_copy.passive_active_stat()
-    #passive_active_stat.to_csv(active_passive_table_path)
-
-    #community.best_partition()
+def make_volume_and_vol_graph(matched_orders : TradesData, heatmap_csv_path : str, heatmap_path :str) -> None:
     # aggregate on agent classes
-    matched_orders_copy.strip_agent_numbers()
+    matched_orders.strip_agent_numbers()
 
-    nodes,edges = make_traded_volume_matrix(matched_orders_copy, cutoff = 0.0)
+    nodes,edges = make_traded_volume_matrix(matched_orders, cutoff = 0.0)
 
     directed_graph = nx.DiGraph()  # Rows are the active agent
     directed_graph.add_nodes_from(nodes)
@@ -82,15 +56,53 @@ def match_bars_and_trades(trades_path, bars_path, heatmap_path,heatmap_csv_path,
         #calculate_total_node_volume(directed_graph)
         #normalize_directional_graph(directed_graph)
 
+def match_bars_and_trades(trades_path : str, bars_path : str, heatmap_path : str ,heatmap_csv_path : str, target_quant : int,n_quantiles = 20) -> None:
+    matched_orders = TradesData("amme_matched_orders")
+    matched_orders.read_data(trades_path)
+    
+    # we want to calculate network properties in different "regimes" these are found by assigning quantiles to each bar
+    
+    bars = pd.read_csv(bars_path) # Read Bars
+    if target_quant > 0:
+        # Assign Quantiles and make windows
+        #bars = assign_percentiles(bars, n_quantiles) this should be done when making the bars
+        windows = make_quantile_windows(bars, target_quant)
+
+        matched_orders_copy = copy.deepcopy(matched_orders) # We copy the trades data objet so we can modify it
+
+            # Read trades
+        matched_orders_copy.trades.index = matched_orders_copy.trades["DateTime"] # make datetime index
+
+
+
+        #select trades in windows define by quantiles
+        matched_orders_copy.select_data_in_windows(windows)
+        
+        #TODO: passive active stats. Are we using this?
+        #passive_active_stat = matched_orders_copy.passive_active_stat()
+        #passive_active_stat.to_csv(active_passive_table_path)
+
+        #community.best_partition()
+        # aggregate on agent classes
+
+        make_volume_and_vol_graph(matched_orders_copy, heatmap_csv_path, heatmap_path)
+    elif target_quant == 0:
+        make_volume_and_vol_graph(matched_orders, heatmap_csv_path, heatmap_path)
+
+    #TODO: impliment
+    # Calculate the total volume traded by each node
+    #calculate_total_node_volume(directed_graph)
+    #normalize_directional_graph(directed_graph)
+
 if __name__ == "__main__":
     trades_path = sys.argv[1]
     bars_path = sys.argv[2]
     heatmap_path = sys.argv[3]
     heatmap_csv_path = sys.argv[4]
-    write_quantiles = int(sys.argv[5])
+    target_quantile = int(sys.argv[5])
     match_bars_and_trades(trades_path,
                           bars_path,
                           heatmap_path,
                           heatmap_csv_path,
-                          write_quantiles,
+                          target_quantile,
                           n_quantiles = 20)
