@@ -14,7 +14,7 @@ import seaborn as sns
 import copy
 import sys
 
-def make_traded_volume_matrix(agents_log, cutoff):
+def make_grouped_traded_volume_matrix(agents_log, cutoff):
 
     #agents_log  # Read matched orders files
 
@@ -35,7 +35,7 @@ def make_volume_and_vol_graph(matched_orders : TradesData, heatmap_csv_path : st
     # aggregate on agent classes
     matched_orders.strip_agent_numbers()
 
-    nodes,edges = make_traded_volume_matrix(matched_orders, cutoff = 0.0)
+    nodes,edges = make_grouped_traded_volume_matrix(matched_orders, cutoff = 0.0)
 
     directed_graph = nx.DiGraph()  # Rows are the active agent
     directed_graph.add_nodes_from(nodes)
