@@ -4,8 +4,8 @@ import numpy as np
 class TradesData:
     def __init__(self, data_type):
         if data_type == "amme_matched_orders":
-            self.active_fill_price_col = " active_fillPrice"  # note theres a leading space
-            self.passive_fill_qty_col = " passive_fillQty"
+            self.active_fill_price_col = "active_fillPrice"  # note theres a leading space
+            self.passive_fill_qty_col = "passive_fillQty"
             self.timestamp_col_name = "Nanos"
             self.timestamp_units = "ns"
             self.active_agent_col = "active_agent"
@@ -116,7 +116,7 @@ class TradesData:
             lambda s: s.split("-")[0])
 
     def make_directional_agent_pair_volumes(self):
-        return self.trades.groupby(["active_agent","passive_agent"])[" passive_fillQty"].sum().reset_index().rename(columns = {" passive_fillQty": "volume"})
+        return self.trades.groupby(["active_agent","passive_agent"])["passive_fillQty"].sum().reset_index().rename(columns = {"passive_fillQty": "volume"})
 
         #resampled_data["Dollar Volume"] = resampled.agg({"Dollar Volume": "sum"})
 
