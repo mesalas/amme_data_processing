@@ -23,7 +23,7 @@ class TradesData:
 
     def read_amme_matched_orders_data(self, path):
         load_csv_kw_args = {"filepath_or_buffer" : path,
-                            "usecols" : ["DateTime",
+                            "usecols" : ["DateTime","Nanos",
                                          self.active_fill_price_col,
                                          self.passive_fill_qty_col,
                                          self.active_agent_col,
