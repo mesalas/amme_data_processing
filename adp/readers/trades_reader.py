@@ -120,7 +120,34 @@ class TradesData:
 
         #resampled_data["Dollar Volume"] = resampled.agg({"Dollar Volume": "sum"})
 
-    
+    def make_daily_active_volume(self):
+        # Define a 1-day window
+        window = pd.Grouper(key="DateTime", freq="B")
+
+        # Create a DataFrame with active agent volumes
+        active_grouped = (
+            self.trades.groupby([window, "active_agent"])["passive_fillQty"]
+            .sum()
+            .reset_index(name="total_active_volume")
+        )
+        active_grouped = active_grouped.rename(columns={"active_agent": "agent"})
+
+        return active_grouped
+
+    def make_daily_passive_volume(self):
+        # Define a 1-day window
+        window = pd.Grouper(key="DateTime", freq="B")
+
+        # Create a DataFrame with passive agent volumes
+        passive_grouped = (
+            self.trades.groupby([window, "passive_agent"])["passive_fillQty"]
+            .sum()
+            .reset_index(name="total_passive_volume")
+        )
+        passive_grouped = passive_grouped.rename(columns={"passive_agent": "agent"})
+
+        return passive_grouped
+#
 #     def read_nyse_trades_data(self,path, symbol = None, compression = "gzip"):
 #         """
 #         Method for reading NYSE TAQ data
