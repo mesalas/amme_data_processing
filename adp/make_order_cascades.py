@@ -237,5 +237,5 @@ def make_order_cascades(args):
     assign_order_to_group(matched_orders)
     get_grouped_trades(matched_orders).to_csv(out_put_file_name_and_path)
 
-if __name__ == "___main__":
+if __name__ == "__main__":
     make_order_cascades(sys.argv[1:])
