@@ -6,7 +6,7 @@ import numpy as np
 from adp.timemethods import date_time_to_sim_time
 
 def get_nodes(df: pd.DataFrame):
-    nodes_df = df[["SimTime", "active_id", "active_orderQty", "active_avgPrice", 'active_agent', 'passive_fillQty', 'passive_fillPrice']].groupby(by = ["active_id"]).agg(simTime = pd.NamedAgg(column="SimTime", aggfunc="first"),
+    nodes_df = df[["SimTime", "active_id", "active_orderQty", "active_avgPrice", 'active_agent', 'passive_fillQty', 'passive_fillPrice']].groupby(by = ["active_id"], sort=False).agg(simTime = pd.NamedAgg(column="SimTime", aggfunc="first"),
     averagePrice = pd.NamedAgg(column="active_avgPrice", aggfunc="first"),
     size = pd.NamedAgg(column='passive_fillQty', aggfunc="sum"),
     agent = pd.NamedAgg(column='active_agent', aggfunc="first"),
@@ -124,7 +124,7 @@ def get_grouped_trades(df: pd.DataFrame):
     grouped_trades = df[~df["group"].isna()].groupby(by="group")
     groups_list = list()
     for name, group in grouped_trades:
-        orders = group.groupby(by="active_id").last()
+        orders = group.groupby(by="active_id", sort=False).last()
         first_order_id = group["active_id"].iloc[0]
         max_order_gen = get_max_order_generation(orders, first_order_id)
 
