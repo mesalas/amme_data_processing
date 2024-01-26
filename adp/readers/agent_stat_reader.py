@@ -45,12 +45,12 @@ class AgentsData:
                        ), sort=False
         )
 
-        bars = list()
+        result_df = pd.DataFrame()
         for name, group in daily_grouped_agent_stat:
             pivot_pos = group.pivot_table(values = self.agent_statistic, index="DateTime", columns="AgentName", aggfunc = "last").ffill().resample(freq).last()
             pivot_pos.columns = pivot_pos.columns.droplevel()
-            bars.append(pivot_pos)
-        return pd.concat(bars).ffill().fillna(0.0)
+            result_df = pd.concat([result_df, pivot_pos])
+        return result_df.ffill().fillna(0.0)
 
     def _resample_agent_stat_daily(self):
         daily_grouped_agent_stat = self.agent_statistic.groupby(
@@ -59,12 +59,12 @@ class AgentsData:
                        ), sort=False
         )
 
-        bars = list()
+        result_df = pd.DataFrame()
         for name, group in daily_grouped_agent_stat:
             pivot_pos = group.pivot_table(values = self.agent_statistic, index="DateTime", columns="AgentName", aggfunc = "last").ffill().tail(1) 
             pivot_pos.columns = pivot_pos.columns.droplevel()
-            bars.append(pivot_pos)
-        return pd.concat(bars).ffill().fillna(0.0)
+            result_df = pd.concat([result_df, pivot_pos])
+        return result_df.ffill().fillna(0.0)
 
 
     def resample(self, freq):
