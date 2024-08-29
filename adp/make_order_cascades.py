@@ -35,7 +35,7 @@ def assign_group(row,node_to_group_map):
     try:
         group = node_to_group_map[row["active_id"]]
     except:
-        group = np.NaN
+        group = np.nan
     return group
 def assign_order_to_group(df: pd.DataFrame):
     nodes_df = get_nodes(df)
@@ -47,7 +47,7 @@ def assign_order_to_group(df: pd.DataFrame):
     S = [G.subgraph(c).copy() for c in nx.connected_components(G) if len(c) > 1]
 
     node_to_group_map = make_node_to_group_map(S)
-    df["group"] = np.NaN
+    df["group"] = np.nan
     df["group"] = df.apply(lambda row : assign_group(row,node_to_group_map), axis=1)
 def MergeMatchedOrdersAndMarketOrders(matched_orders, market_orders):
     """
