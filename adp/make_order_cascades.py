@@ -159,8 +159,8 @@ def get_grouped_trades(df: pd.DataFrame):
             first_buy_price = select_buy['active_fillPrice'].iloc[0]
             last_buy_price = select_buy['active_fillPrice'].iloc[-1]
         else:
-            first_buy_price = np.NaN
-            last_buy_price = np.NaN
+            first_buy_price = np.nan
+            last_buy_price = np.nan
         # Sell side stats
         select_sell = group[group['active_side'] == "SELL"]
         sell_volume = select_sell['passive_fillQty'].sum()
@@ -169,8 +169,8 @@ def get_grouped_trades(df: pd.DataFrame):
             first_sell_price = select_sell['active_fillPrice'].iloc[0]
             last_sell_price = select_sell['active_fillPrice'].iloc[-1]
         else:
-            first_sell_price = np.NaN
-            last_sell_price = np.NaN
+            first_sell_price = np.nan
+            last_sell_price = np.nan
 
         # First order stats
         first_order_id = group['active_id'].unique()[0]
